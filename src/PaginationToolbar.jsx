@@ -5,6 +5,7 @@ var assign    = require('object-assign')
 var Toolbar   = require('react-simple-toolbar')
 var Region    = Toolbar.Region
 var normalize = require('react-style-normalizer')
+var sprintf   = require("sprintf-js").sprintf
 
 var WHITESPACE = '\u00a0'
 function sortAsc(a, b){
@@ -151,6 +152,12 @@ module.exports = React.createClass({
 				overStyle: {
 					fill: 'gray'
 				}
+			},
+
+			lang: {
+				pagingText : 'Page %s of %s.',
+				pageSize : 'Page size ',
+				displayingItems : 'Displaying %s - %s of %s.'
 			}
 		}
 	},
@@ -352,17 +359,18 @@ module.exports = React.createClass({
 		}
 
 		var textStyle = {display: 'inline-block', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}
-
+		var text = sprintf(props.lang.displayingItems, start, end, props.dataSourceCount || 1);
 		return <div style={normalize({display: 'flex', justifyContent: 'flex-end', alignItems: 'center'})}>
-			<span style={textStyle}>Displaying {start} - {end} of {props.dataSourceCount || 1}.</span>
+			<span style={textStyle}>{text}</span>
 			{sep}{refreshIcon}
 		</div>
 	},
 
 	renderPageSize: function(props) {
-		if (props.showPageSize){
+		if (props.showPageSize) {
+			var text = props.lang.pageSize;
 			return <div>
-				Page size {this.renderSelect(props)}
+				{text}{this.renderSelect(props)}
 			</div>
 		}
 	},
@@ -388,13 +396,16 @@ module.exports = React.createClass({
 
 		var sep = this.separator
 
+		var pagingText = sprintf(props.lang.pagingText, '|INPUT|', props.maxPage);
+		var textParts = pagingText.split('|INPUT|');
+
 		return <Toolbar {...props}>
 			<Region flex="1 1 auto" style={normalize({display: 'flex', alignItems: 'center', minWidth: minWidth})}>
 				{this.icon('gotoFirst', props)}
 				{this.icon('gotoPrev', props)}
 
 				{sep}
-				Page {this.renderInput(props)} of{WHITESPACE}{props.maxPage}.
+				{textParts[0]}{this.renderInput(props)}{textParts[1]}
 				{sep}
 				{this.icon('gotoNext', props)}
 				{this.icon('gotoLast', props)}
