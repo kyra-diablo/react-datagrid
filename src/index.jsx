@@ -102,6 +102,7 @@ module.exports = React.createClass({
 
         //you can customize the column menu by specifying a factory
         columnMenuFactory: React.PropTypes.func,
+        oneMenuOnly: React.PropTypes.bool,
         onDataSourceResponse: React.PropTypes.func,
         onDataSourceSuccess: React.PropTypes.func,
         onDataSourceError: React.PropTypes.func,
@@ -367,8 +368,8 @@ module.exports = React.createClass({
             showMenu         : this.showMenu,
             filterMenuFactory : this.filterMenuFactory,
             menuColumn       : state.menuColumn,
-            columnMenuFactory: props.columnMenuFactory
-
+            columnMenuFactory: props.columnMenuFactory,
+            oneMenuOnly      : props.oneMenuOnly
         })
     },
 

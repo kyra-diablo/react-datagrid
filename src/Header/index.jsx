@@ -60,7 +60,8 @@ module.exports = React.createClass({
     displayName: 'ReactDataGrid.Header',
 
     propTypes: {
-        columns: React.PropTypes.array
+        columns: React.PropTypes.array,
+        oneMenuOnly: React.PropTypes.bool
     },
 
     onDrop: function(event){
@@ -148,12 +149,13 @@ module.exports = React.createClass({
 
         var style = normalize(props.style)
         var headerStyle = normalize({
-            paddingRight: props.scrollbarSize,
+            marginRight: props.scrollbarSize,
             transform   : 'translate3d(' + -props.scrollLeft + 'px, ' + -props.scrollTop + 'px, 0px)'
         })
 
         return (
             <div style={style} className={props.className}>
+                {this.props.oneMenuOnly ? <div>{this.renderMainMenu(props, state)}</div> : null}
                 <div className='z-header' style={headerStyle}>
                     {cells}
                 </div>
@@ -246,7 +248,7 @@ module.exports = React.createClass({
                 {...events}
             >
                 {filter}
-                {menu}
+                {this.props.oneMenuOnly ? null : menu}
                 {resizer}
             </Cell>
         )
@@ -283,18 +285,30 @@ module.exports = React.createClass({
 
         ;(this.props.onSortChange || emptyFn)(sortInfo)
     },
+    renderMenuIcon: function(props){
+        var menuIcon = props.menuIcon || (
+            <svg version="1.1" style={{transform: 'translate3d(0,0,0)', height:'100%', width: '100%', padding: '0px 2px' }} viewBox="0 0 3 4">
+                <polygon points="0,0 1.5,3 3,0 " style={{fill: props.menuIconColor,strokeWidth:0, fillRule: 'nonZero'}} />
+            </svg>
+        );
+        return menuIcon;
+    },
+    renderMainMenu: function(props, state){
+        if (props.withColumnMenu){
+            return
+        }
 
+        return <div style={{ float: 'right', width: 18, padding: '10px 1px'}} className="z-show-menu" onMouseUp={this.handleShowMenuMouseUp.bind(this, props, null, null)}>
+            {this.renderMenuIcon(props)}
+        </div>
+    },
     renderColumnMenu: function(props, state, column, index){
         if (!props.withColumnMenu){
             return
         }
 
-        var menuIcon = props.menuIcon || <svg version="1.1" style={{transform: 'translate3d(0,0,0)', height:'100%', width: '100%', padding: '0px 2px' }} viewBox="0 0 3 4">
-                <polygon points="0,0 1.5,3 3,0 " style={{fill: props.menuIconColor,strokeWidth:0, fillRule: 'nonZero'}} />
-            </svg>
-
         return <div className="z-show-menu" onMouseUp={this.handleShowMenuMouseUp.bind(this, props, column, index)}>
-            {menuIcon}
+            {this.renderMenuIcon(props)}
         </div>
     },
 
@@ -350,7 +364,7 @@ module.exports = React.createClass({
         }
 
         this.props.showMenu(menu.bind(this, event.currentTarget), {
-            menuColumn: column.name
+            menuColumn: column ? column.name : ''
         })
     },
 
