@@ -82,6 +82,7 @@
     "react-virtual-scroller": "^2.0.0",
     "region": "^2.1.2",
     "region-align": "^2.1.2",
+    "sprintf-js": "^1.0.3",
     "ustring": "^1.4.1",
     "whatwg-fetch": "^0.10.0"
   },

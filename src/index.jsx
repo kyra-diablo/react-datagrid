@@ -443,7 +443,8 @@ module.exports = React.createClass({
                 reload          : this.reload,
                 onPageChange    : this.gotoPage,
                 onPageSizeChange: this.setPageSize,
-                border          : props.style.border
+                border          : props.style.border,
+                lang            : props.lang
             }, props.paginationToolbarProps)
 
             paginationToolbar = paginationToolbarFactory(paginationProps)
